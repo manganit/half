@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Copyright 2017 Manganit.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.manganit</groupId>
+    <artifactId>hadoop-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath/>
+  </parent>
+  <groupId>com.manganit</groupId>
+  <artifactId>half</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <!--<version>${release}-${revision}</version>-->
+  <packaging>pom</packaging>
+  
+  <name>Hadoop Application Light Framework</name>
+  <description>Hadoop Application Light Framework (HALF) is made of useful Java libraries and helpers to interact with Oozie, HDFS, Hive Metastore, HBase and Pig</description>
+  <url>http://www.manganit.com/half</url>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+    
+  <scm>
+    <connection>scm:git:git://github.com/manganit/half.git</connection>
+    <developerConnection>scm:git:git@github.com:manganit/half.git</developerConnection>
+    <url>http://github.com/manganit/half/tree/master</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <issueManagement>
+    <system>Github Issues</system>
+    <url>http://github.com/manganit/half/issues</url>
+  </issueManagement>
+    
+  <modules>
+    <module>util</module>
+    <module>logging</module>
+    <module>security</module>
+    <module>action</module>
+    <module>client</module>
+  </modules>
+    
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.version>3.7.0</maven.compiler.version>
+    <!--<parent.version>2.2.4</parent.version>-->
+    <!-- cf http://blog.xebia.com/2012/09/30/continuous-releasing-of-maven-artifacts/ -->
+    <!--<release>1.0</release>-->
+    <!--<revision>SNAPSHOT</revision>-->
+    <snapshotDependencyAllowed>false</snapshotDependencyAllowed>
+  </properties>
+    
+  <build>
+    <defaultGoal>install</defaultGoal>
+    <pluginManagement>
+      <plugins/>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.2</version>
+        <configuration>
+          <!--mvn -B release:prepare then mvn -B release:perform-->
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <tagNameFormat>v@{project.version}</tagNameFormat>
+          <goals>deploy</goals>
+          <!-- for debug purpose -->
+          <localCheckout>true</localCheckout>
+          <pushChanges>false</pushChanges>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.version}</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <!-- Make sure that only non-snapshot versions are used for the dependencies.
+            Only active when property 'snapshotDependencyAllowed' is false. -->
+            <id>enforce-no-snapshots</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <skip>${snapshotDependencyAllowed}</skip>
+              <rules>
+                <requireReleaseDeps>
+                  <message>No Snapshots Allowed!</message>
+                  <onlyWhenRelease >true</onlyWhenRelease>
+                  <failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>
+                </requireReleaseDeps>
+                <!--
+                <requireReleaseVersion>
+                    <message>No Snapshots Allowed!</message>
+                </requireReleaseVersion>
+                -->
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.3</version>
+        <configuration>
+          <show>private</show>
+          <nohelp>true</nohelp>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.3</version>
+        <configuration>
+          <show>public</show>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+</project>
