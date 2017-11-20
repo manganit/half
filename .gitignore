@@ -1,4 +1,11 @@
 target/
+action/target/
+client/target/
+logging/target/
+security/target/
+util/target/
+.idea/*
+*.iml
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
