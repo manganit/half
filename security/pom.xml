@@ -18,8 +18,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.manganit</groupId>
-    <artifactId>half</artifactId>
+    <groupId>com.manganit.half</groupId>
+    <artifactId>half-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
   <groupId>com.manganit.half</groupId>

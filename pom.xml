@@ -23,8 +23,8 @@
     <version>1.0</version>
     <relativePath/>
   </parent>
-  <groupId>com.manganit</groupId>
-  <artifactId>half</artifactId>
+  <groupId>com.manganit.half</groupId>
+  <artifactId>half-parent</artifactId>
   <version>0.1-SNAPSHOT</version>
   <!--<version>${release}-${revision}</version>-->
   <packaging>pom</packaging>
