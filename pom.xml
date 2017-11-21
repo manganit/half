@@ -20,7 +20,7 @@
   <parent>
     <groupId>com.manganit</groupId>
     <artifactId>hadoop-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <relativePath/>
   </parent>
   <groupId>com.manganit</groupId>
@@ -29,8 +29,11 @@
   <!--<version>${release}-${revision}</version>-->
   <packaging>pom</packaging>
   
-  <name>Hadoop Application Light Framework</name>
-  <description>Hadoop Application Light Framework (HALF) is made of useful Java libraries and helpers to interact with Oozie, HDFS, Hive Metastore, HBase and Pig</description>
+  <name>Half Project Parent POM</name>
+  <description>Hadoop Application Light Framework (Half) provides useful
+  Java libraries and helpers to build applications
+  with Oozie, HDFS, Hive Metastore, HBase and Pig
+  </description>
   <url>http://www.manganit.com/half</url>
 
   <licenses>
@@ -63,14 +66,10 @@
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <maven.compiler.version>3.7.0</maven.compiler.version>
-    <!--<parent.version>2.2.4</parent.version>-->
-    <!-- cf http://blog.xebia.com/2012/09/30/continuous-releasing-of-maven-artifacts/ -->
-    <!--<release>1.0</release>-->
-    <!--<revision>SNAPSHOT</revision>-->
+    <java.version>1.8</java.version>
     <snapshotDependencyAllowed>false</snapshotDependencyAllowed>
   </properties>
-    
+  
   <build>
     <defaultGoal>install</defaultGoal>
     <pluginManagement>
@@ -79,99 +78,23 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.5.2</version>
-        <configuration>
-          <!--mvn -B release:prepare then mvn -B release:perform-->
-          <autoVersionSubmodules>true</autoVersionSubmodules>
-          <tagNameFormat>v@{project.version}</tagNameFormat>
-          <goals>deploy</goals>
-          <!-- for debug purpose -->
-          <localCheckout>true</localCheckout>
-          <pushChanges>false</pushChanges>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compiler.version}</version>
-        <configuration>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.target}</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.4</version>
-        <executions>
+        <executions>  
           <execution>
-            <!-- Make sure that only non-snapshot versions are used for the dependencies.
-            Only active when property 'snapshotDependencyAllowed' is false. -->
-            <id>enforce-no-snapshots</id>
+            <id>enforce-maven-version</id>
             <goals>
               <goal>enforce</goal>
             </goals>
             <configuration>
-              <skip>${snapshotDependencyAllowed}</skip>
               <rules>
-                <requireReleaseDeps>
-                  <message>No Snapshots Allowed!</message>
-                  <onlyWhenRelease >true</onlyWhenRelease>
-                  <failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>
-                </requireReleaseDeps>
-                <!--
-                <requireReleaseVersion>
-                    <message>No Snapshots Allowed!</message>
-                </requireReleaseVersion>
-                -->
+                <requireJavaVersion>
+                  <version>${java.version}</version>
+                </requireJavaVersion>
               </rules>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.3</version>
-        <configuration>
-          <show>private</show>
-          <nohelp>true</nohelp>
-        </configuration>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
+          </execution> 
         </executions>
       </plugin>
     </plugins>
   </build>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.3</version>
-        <configuration>
-          <show>public</show>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
 </project>

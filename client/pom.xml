@@ -22,7 +22,7 @@
     <artifactId>half</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
-  <groupId>com.manganit.half.half</groupId>
+  <groupId>com.manganit.half</groupId>
   <artifactId>half-client</artifactId>
   <name>half-client</name>
   <description>Hadoop Light Application Framework - Client Module</description>
