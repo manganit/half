@@ -24,7 +24,7 @@
   </parent>
   <groupId>com.manganit.half</groupId>
   <artifactId>half-parent</artifactId>
-  <version>0.1</version>
+  <version>0.2-SNAPSHOT</version>
   <!--<version>${release}-${revision}</version>-->
   <packaging>pom</packaging>
   
@@ -46,7 +46,7 @@
     <connection>scm:git:git://github.com/manganit/half.git</connection>
     <developerConnection>scm:git:git@github.com:manganit/half.git</developerConnection>
     <url>http://github.com/manganit/half/tree/master</url>
-    <tag>v0.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
