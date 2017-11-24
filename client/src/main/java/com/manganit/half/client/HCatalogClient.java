@@ -84,7 +84,7 @@ public class HCatalogClient {
      */
     private HiveMetaStoreClient createClient(Configuration conf) throws Exception {
         try {
-            LOG.info("Creating HCatalog client object for metastore using conf {}", conf.toString());
+            LOG.debug("Creating HCatalog client object for metastore using conf {}", conf.toString());
             final Credentials credentials = getCredentials(conf);
             Configuration jobConf = credentials != null ? copyCredentialsToConf(conf, credentials) : conf;
             hCatConf = createHiveConf(jobConf);
@@ -115,9 +115,9 @@ public class HCatalogClient {
             return null;
         }
         try {
-            LOG.info("Adding credentials/delegation tokens from token file={} to conf", tokenFile);
+            LOG.debug("Adding credentials/delegation tokens from token file={} to conf", tokenFile);
             Credentials credentials = Credentials.readTokenStorageFile(new File(tokenFile), conf);
-            LOG.info("credentials numberOfTokens={}, numberOfSecretKeys={}",
+            LOG.debug("credentials numberOfTokens={}, numberOfSecretKeys={}",
                     credentials.numberOfTokens(), credentials.numberOfSecretKeys());
             return credentials;
         } catch (IOException e) {
@@ -154,7 +154,7 @@ public class HCatalogClient {
    * @throws Exception Exception
    */
   public boolean isAlive() throws Exception {
-        LOG.info("Checking if the service is alive");
+        LOG.debug("Checking if the service is alive");
         try {
             List<String> databases = getClient().getAllDatabases();
             return !databases.isEmpty();
@@ -171,7 +171,7 @@ public class HCatalogClient {
    * @throws Exception Exception
    */
   public boolean tableExists(final String database, final String tableName) throws Exception {
-        LOG.info("Checking if the table exists: {}", tableName);
+        LOG.debug("Checking if the table exists: {}", tableName);
         try {
             Table table = getClient().getTable(database, tableName);
             return table != null;
@@ -188,7 +188,7 @@ public class HCatalogClient {
    * @throws Exception Exception
    */
   public boolean isTableExternal(String database, String tableName) throws Exception {
-        LOG.info("Checking if the table is external: {}", tableName);
+        LOG.debug("Checking if the table is external: {}", tableName);
         try {
             Table table = getClient().getTable(database, tableName);
             return table.getTableType().equals(TableType.EXTERNAL_TABLE.name());
@@ -219,7 +219,7 @@ public class HCatalogClient {
    */
   public List<HCatalogPartition> listPartitionsByFilter(String database, String tableName,
             String filter) throws Exception {
-        LOG.info("List partitions for: {}, partition filter: {}", tableName, filter);
+        LOG.debug("List partitions for: {}, partition filter: {}", tableName, filter);
         try {
             List<HCatalogPartition> catalogPartitionList = new ArrayList<HCatalogPartition>();
             List<Partition> hCatPartitions = getClient().listPartitionsByFilter(database, tableName, filter, (short) -1);
@@ -259,7 +259,7 @@ public class HCatalogClient {
    */
   public boolean dropPartition(String database, String tableName,
             List<String> partitionValues, boolean deleteData) throws Exception {
-        LOG.info("Dropping partition for: {}, partition: {}", tableName, partitionValues);
+        LOG.debug("Dropping partition for: {}, partition: {}", tableName, partitionValues);
         try {
             return getClient().dropPartition(database, tableName, partitionValues, deleteData);
         } catch (Exception e) {
@@ -277,7 +277,7 @@ public class HCatalogClient {
    */
   public void dropPartitions(String database, String tableName,
             List<String> partitionValues, boolean deleteData) throws Exception {
-        LOG.info("Dropping partitions for: {}, partitions: {}", tableName, partitionValues);
+        LOG.debug("Dropping partitions for: {}, partitions: {}", tableName, partitionValues);
         try {
             List<Partition> partitions = getClient().listPartitions(database, tableName, partitionValues, (short) -1);
             for (Partition part : partitions) {
@@ -299,7 +299,7 @@ public class HCatalogClient {
    */
   public HCatalogPartition getPartition(String database, String tableName,
             List<String> partitionValues) throws Exception {
-        LOG.info("Fetch partition for: {}, partition spec: {}", tableName, partitionValues);
+        LOG.debug("Fetch partition for: {}, partition spec: {}", tableName, partitionValues);
         try {
             Partition hCatPartition = getClient().getPartition(database, tableName, partitionValues);
             return createCatalogPartition(hCatPartition);
@@ -310,7 +310,7 @@ public class HCatalogClient {
   
   public HCatalogPartition addPartition(String database, String tableName,
             List<String> partitionValues) throws Exception {
-        LOG.info("Fetch partition for: {}, partition spec: {}", tableName, partitionValues);
+        LOG.debug("Fetch partition for: {}, partition spec: {}", tableName, partitionValues);
         try {
             Partition hCatPartition = getClient().getPartition(database, tableName, partitionValues);
             return createCatalogPartition(hCatPartition);
@@ -321,7 +321,7 @@ public class HCatalogClient {
   
   public void alterPartition(String database, String tableName,
             List<String> partitionValues) throws Exception {
-        LOG.info("Fetch partition for: {}, partition spec: {}", tableName, partitionValues);
+        LOG.debug("Fetch partition for: {}, partition spec: {}", tableName, partitionValues);
         try {
             Partition hCatPartition = getClient().getPartition(database, tableName, partitionValues);
             getClient().alter_partition(tableName, tableName, hCatPartition);

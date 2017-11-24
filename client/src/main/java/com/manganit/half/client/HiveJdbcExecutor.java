@@ -18,6 +18,7 @@ package com.manganit.half.client;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -220,6 +221,23 @@ public class HiveJdbcExecutor {
       throw new Exception(e);
     }
     logger.info("HiveUtil.execute:all time =" + (System.currentTimeMillis() - startTime));
+  }
+  
+  // Print out a result set.
+  public int printResultSet(ResultSet rs, int max) throws SQLException {
+      ResultSetMetaData metaData = rs.getMetaData();
+      int rowIndex = 0;
+      while (rs.next()) {
+          for (int i = 1; i <= metaData.getColumnCount(); i++) {
+              System.out.print("\t" + rs.getString(i));
+          }
+          System.out.println();
+          rowIndex++;
+          if (max > 0 && rowIndex >= max) {
+              break;
+          }
+      }
+      return rowIndex;
   }
   
   public void testGetQueryLog(String sql) throws Exception {

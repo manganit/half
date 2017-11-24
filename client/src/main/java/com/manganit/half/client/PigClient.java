@@ -52,17 +52,17 @@ public class PigClient {
 
   private PigServer pigServer;
   private final String scriptName;
-  private Map<String, String> propertyFileParamaters;
+  private Map<String, String> propertyFileParameters;
   private List<String> propertyFiles;
 
   private List<PigStats> pigStatistics;
 
-  public PigClient(Map<String, String> propertyFileParamaters,
+  public PigClient(Map<String, String> propertyFileParameters,
                    String scriptName, String processId, String worflowId) {
       this.logger = Logger.getLogger(PigClient.class);
 
       this.scriptName = scriptName;
-      this.propertyFileParamaters = propertyFileParamaters;
+      this.propertyFileParameters = propertyFileParameters;
 
   }
 
@@ -126,8 +126,8 @@ public class PigClient {
       logger.debug("Loading the script " + scriptName);
 
       // Load the script
-      if(this.propertyFileParamaters == null){
-          pigServer.registerScript(scriptName, this.propertyFileParamaters);
+      if(this.propertyFileParameters == null){
+          pigServer.registerScript(scriptName, this.propertyFileParameters);
       }else{
           pigServer.registerScript(scriptName, this.propertyFiles);
       }

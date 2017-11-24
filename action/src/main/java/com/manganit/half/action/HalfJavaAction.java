@@ -16,26 +16,14 @@
 
 package com.manganit.half.action;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivilegedExceptionAction;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.Properties;
-import java.util.logging.Level;
 import javax.crypto.Cipher;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.util.Tool;
 
@@ -44,7 +32,7 @@ import org.apache.log4j.Logger;
 import com.manganit.half.security.CredentialsManager;
 import com.manganit.half.security.LoginManager;
 import com.manganit.half.logging.Log4jConfigurator;
-import java.util.Arrays;
+import com.manganit.half.util.EnvUtils;
 
 /**
  * <p>
@@ -114,7 +102,6 @@ public abstract class HalfJavaAction extends Configured implements Tool {
    * AUTHENTICATION_METHOD_LOGIN
    */
   public final static String AUTHENTICATION_METHOD_LOGIN = "LOGIN";
-
 
   /**
    * Get configured FileSystem
@@ -286,27 +273,6 @@ public abstract class HalfJavaAction extends Configured implements Tool {
   }
 
   /**
-   * Convert Configuration to Properties
-   * @param conf Configuration
-   * @return Configuration
-   */
-  public Properties getProperties(Configuration conf) {
-    Properties jobprops = new Properties();
-    for (Map.Entry<String, String> entry : conf) {
-      jobprops.setProperty(entry.getKey(), entry.getValue());
-    }
-    return jobprops;
-  }
-
-  /**
-   * Convert Configuration to Properties
-   * @return Configuration
-   */
-  public Properties getProperties() {
-    return getProperties(this.getConf());
-  }
-
-  /**
    * Initialize the action context before the impersonation
    * @throws IOException IOException
    */
@@ -426,76 +392,22 @@ public abstract class HalfJavaAction extends Configured implements Tool {
 
   /**
    * Print useful information : Java properties, System properties, Container root directory and Workflow parameters
-   * @throws IOException exception
    */
-  public void printVariables() throws IOException {
-    System.out.println("######################################################################");
-    System.out.println("WorkflowId " + getWorkflowId());
-    System.out.println("ActionId " + getActionId());
-    System.out.println("WorkflowName " + getWorkflowName());
-    System.out.println("ActionName " + getActionName());
-    System.out.println("KerberosPrincipal " + getKerberosPrincipal());
-    System.out.println("KerberosKeytab " + getKerberosKeytab());
-    try {
-      System.out.println("JCE AES Key Length " + Integer.toString(Cipher.getMaxAllowedKeyLength("AES")));
-    } catch (NoSuchAlgorithmException ex) {
-      System.out.println(ex);
-    }
-    // Print global properties
-    System.out.println("###################### Java properties ###############################");
-    System.getProperties().list(System.out);
-    // Print Hadoop Environment Configuration
-    System.out.println("###################### Configuration #################################");
-    //Configuration.dumpConfiguration(getConf(), new PrintWriter(System.out, true));
-    getProperties(getConf()).store(System.out, null);
-    // Print Oozie Action Configuration
-    System.out.println("");
-    // Print Container files
-    System.out.println("###################### Current directory files #######################");
-    File dir = new File(".").getCanonicalFile();
-    File[] filesList = dir.listFiles();
-    for (File file : filesList) {
-      if (file.isFile()) {
-        String filename = file.getName();
-        System.out.println("     " + filename);
-      }
-    }
-    System.out.println("######################################################################");
+  public void printContext() {
+    logger.info("######################################################################");
+    logger.info("WorkflowId " + getWorkflowId());
+    logger.info("ActionId " + getActionId());
+    logger.info("WorkflowName " + getWorkflowName());
+    logger.info("ActionName " + getActionName());
+    logger.info("KerberosPrincipal " + getKerberosPrincipal());
+    logger.info("KerberosKeytab " + getKerberosKeytab());
+    EnvUtils.printJCESettings(null);
+    EnvUtils.printEnv("###################### Env variables #######################");
+    EnvUtils.printJavaProperties("###################### Java properties ###############################");
+    EnvUtils.printConfiguration(JavaActionConfiguration.getOozieConfiguration(),"###################### Oozie inherited Configuration #################################");
+    EnvUtils.printConfiguration(getConf(),"###################### Final Hadoop Configuration #################################");
+    EnvUtils.printClassPath(true, "###################### Classpath #######################");
+    EnvUtils.printCurrentDirContents("###################### Current directory files #######################");
+    logger.info("######################################################################");
   }
-
-  /**
-   * Print classpath with short filenames
-   */
-  public static void printClassPath() {
-    printClassPath(false);
-  }
-  
-  /**
-   * Print classpath : sharedlib jars should appear here
-   * @param fullPath set to true in order to print the absolute full path
-   */
-  public static void printClassPath(boolean fullPath) {
-    System.out.println("###################### Classpath #######################");
-    ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
-    URL[] urls = ((URLClassLoader) sysClassLoader).getURLs();
-    //Arrays.sort(urls);
-    for (URL url : urls) {
-      if (fullPath)
-        System.out.println(new File(url.getFile()).getAbsolutePath());
-      else
-        System.out.println(new File(url.getFile()).getName());
-    }
-  }
-  
-  /**
-   * Print env variables
-   */  
-  public static void printEnv() {
-    System.out.println("###################### Env variables #######################");
-    SortedMap<String, String> sortedEnv = new TreeMap<String, String>(System.getenv());
-    for (String envName : sortedEnv.keySet()) {
-      System.out.format("%s=%s%n", envName, sortedEnv.get(envName));
-    }
-  }
-
 }

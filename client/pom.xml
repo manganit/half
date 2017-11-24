@@ -28,6 +28,11 @@
     
   <dependencies>
     <dependency>
+      <groupId>com.manganit.half</groupId>
+      <artifactId>half-util</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
@@ -99,6 +104,10 @@
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-jdbc</artifactId>
       <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-yarn-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.hive.hcatalog</groupId>
@@ -205,25 +214,5 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!--              
-    <dependency>
-    <groupId>org.apache.hive</groupId>
-    <artifactId>hive-metastore</artifactId>
-    <version>${hive.version}</version>
-    <exclusions>
-    </exclusions>
-    </dependency>
-    <dependency>
-    <groupId>org.apache.hive</groupId>
-    <artifactId>hive-common</artifactId>
-    <version>${hive.version}</version>
-    <exclusions>
-    <exclusion>
-    <groupId>org.apache.hadoop</groupId>
-    <artifactId>hadoop-client</artifactId>
-    </exclusion>
-    </exclusions>
-    </dependency>
-    -->
   </dependencies>
 </project>

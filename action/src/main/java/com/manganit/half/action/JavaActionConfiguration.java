@@ -29,7 +29,7 @@ import org.apache.hadoop.hive.conf.HiveConf;
  */
 
 public class JavaActionConfiguration {
-
+  
     public static Path getOozieConfigurationPath() {
         String actionXml = System.getProperty("oozie.action.conf.xml");
         if (actionXml == null) {

@@ -157,6 +157,7 @@ public class HiveConnectionBuilder
   }
   
   public String buildConnectionString() {
+    setValuesFromEnvironment();
     if (conf != null) {
       setValuesFromConfiguration();
     }
@@ -203,13 +204,6 @@ public class HiveConnectionBuilder
     if (this.getHost()   == null) { this.setHost("localhost"); }
     if (this.getPort()   <= 0)    { this.setPort(Integer.parseInt(/*Utils.*/DEFAULT_PORT)); }
     
-    if((System.getProperty("javax.net.ssl.trustStore") != null) 
-    && (System.getProperty("javax.net.ssl.trustStorePassword") != null)) {
-      setValue(sessionVars, USE_SSL, USE_SSL_TRUE);
-      setValue(sessionVars, SSL_TRUST_STORE, System.getProperty("javax.net.ssl.trustStore"));
-      setValue(sessionVars, SSL_TRUST_STORE_PASSWORD, System.getProperty("javax.net.ssl.trustStorePassword"));
-    }
-    
     if (this.getZooKeeperEnsemble() != null) {
       setValue(sessionVars, ZOOKEEPER_NAMESPACE, ZOOKEEPER_DEFAULT_NAMESPACE);
       setValue(sessionVars, SERVICE_DISCOVERY_MODE, SERVICE_DISCOVERY_MODE_ZOOKEEPER);
@@ -223,6 +217,28 @@ public class HiveConnectionBuilder
       setValue(sessionVars, HTTP_PATH, DEFAULT_HTTP_PATH);
     }
   }
+  
+  private void setValuesFromEnvironment() {
+    if (System.getProperty("hive.server.host") != null) {
+      this.setHost(System.getProperty("hive.server.host"));
+    }
+    if (System.getProperty("hive.server.port") != null) {
+      this.setPort(Integer.parseInt(System.getProperty("hive.server.port")));
+    }
+    if (System.getProperty("hive.zookeeper.quorum") != null) {
+      this.setZooKeeperEnsemble(System.getProperty("hive.zookeeper.quorum"));
+    }
+    if (System.getProperty("hive.kerberos.principal") != null) {
+      setValue(sessionVars, AUTH_PRINCIPAL, System.getProperty("hive.kerberos.principal"));
+    }
+      
+    if((System.getProperty("javax.net.ssl.trustStore") != null) 
+    && (System.getProperty("javax.net.ssl.trustStorePassword") != null)) {
+      setValue(sessionVars, USE_SSL, USE_SSL_TRUE);
+      setValue(sessionVars, SSL_TRUST_STORE, System.getProperty("javax.net.ssl.trustStore"));
+      setValue(sessionVars, SSL_TRUST_STORE_PASSWORD, System.getProperty("javax.net.ssl.trustStorePassword"));
+    }
+}
   
   private void setValuesFromConfiguration() {
     setValue(sessionVars, USE_SSL, this.conf.get("hive.server2.use.SSL"));
