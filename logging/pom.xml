@@ -19,7 +19,7 @@
   <parent>
     <groupId>com.manganit.half</groupId>
     <artifactId>half-parent</artifactId>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
   </parent>
   <groupId>com.manganit.half</groupId>
   <artifactId>half-logging</artifactId>
