@@ -1,3 +1,6 @@
+# Half - Hadoop Light Application Framework
+
+### What is Half ? :
 Half is basically a Java library that helps you to write applications that interact with Hadoop components.
 Basically, Half takes care of :
     - Hadoop Configuration management from config files, Oozie context and runtime arguments
